@@ -12,7 +12,7 @@ from sqlalchemy.orm import selectinload
 from .config import settings
 from .database import Base,engine,get_db
 from .models import Admin,Applicant,ApplicantStatus,Event,Message,Payment,PaymentStatus
-from .schemas import ApplicantCreate,ApplicantOut,EventCreate,EventOut,LoginIn,PaymentOut,PrepareIn,PrepareOut,TokenOut
+from .schemas import ApplicantCreate,ApplicantOut,EventCreate,EventOut,LoginIn,PasswordChangeIn,PaymentOut,PrepareIn,PrepareOut,TokenOut
 from .security import create_token,hash_password,require_admin,verify_password
 from .services import send_zoom_email
 
@@ -31,7 +31,12 @@ async def health(): return {"status":"ok"}
 async def login(data:LoginIn,db:AsyncSession=Depends(get_db)):
     a=await db.scalar(select(Admin).where(Admin.email==data.email))
     if not a or not verify_password(data.password,a.password_hash): raise HTTPException(401,"이메일 또는 비밀번호를 확인하세요")
-    return TokenOut(access_token=create_token(str(a.admin_id)),name=a.name)
+    return TokenOut(access_token=create_token(a),name=a.name)
+@app.post("/api/v1/auth/change-password",response_model=TokenOut)
+async def change_password(data:PasswordChangeIn,admin:Admin=Depends(require_admin),db:AsyncSession=Depends(get_db)):
+    if not verify_password(data.current_password,admin.password_hash): raise HTTPException(400,"현재 비밀번호가 일치하지 않습니다")
+    admin.password_hash=hash_password(data.new_password); await db.commit(); await db.refresh(admin)
+    return TokenOut(access_token=create_token(admin),name=admin.name)
 @app.get("/api/v1/events",response_model=list[EventOut])
 async def events(admin=Depends(require_admin),db:AsyncSession=Depends(get_db)):
     rows=(await db.scalars(select(Event).options(selectinload(Event.applicants)).order_by(Event.start_date))).all()

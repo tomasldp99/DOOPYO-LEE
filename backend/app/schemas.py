@@ -5,6 +5,13 @@ from pydantic import BaseModel, EmailStr, Field, HttpUrl, model_validator
 from .models import EventStatus, ApplicantStatus, PaymentStatus
 class LoginIn(BaseModel): email:EmailStr; password:str=Field(min_length=8,max_length=128)
 class TokenOut(BaseModel): access_token:str; token_type:str="bearer"; name:str
+class PasswordChangeIn(BaseModel):
+    current_password:str=Field(min_length=8,max_length=128)
+    new_password:str=Field(min_length=8,max_length=128)
+    @model_validator(mode="after")
+    def passwords_must_differ(self):
+        if self.current_password==self.new_password: raise ValueError("새 비밀번호는 현재 비밀번호와 달라야 합니다")
+        return self
 class EventCreate(BaseModel):
     title:str=Field(min_length=2,max_length=200); description:str=Field(min_length=10,max_length=10000); instructor:str=Field(min_length=2,max_length=100); start_date:datetime; end_date:datetime; price:Decimal=Field(ge=0); capacity:int=Field(gt=0,le=100000); registration_start:datetime|None=None; registration_end:datetime|None=None; zoom_url:HttpUrl; refund_policy:str=Field(min_length=5,max_length=3000); status:EventStatus=EventStatus.OPEN
     @model_validator(mode="after")
