@@ -1,0 +1,3 @@
+import type {Metadata} from "next";import "./globals.css";
+export const metadata:Metadata={metadataBase:new URL(process.env.NEXT_PUBLIC_SITE_URL||"http://localhost:3000"),title:"EduPay Link | 교육 신청과 수납을 한 번에",description:"교육 신청, 계좌이체·현장결제 확인, Zoom 안내를 한 번에 관리하세요.",openGraph:{title:"EduPay Link",description:"교육 신청부터 수납 확인, Zoom 안내까지 한 번에",images:["/og.png"]},twitter:{card:"summary_large_image",title:"EduPay Link",description:"교육 신청부터 수납 확인, Zoom 안내까지 한 번에",images:["/og.png"]}};
+export default function RootLayout({children}:{children:React.ReactNode}){return <html lang="ko"><body>{children}</body></html>}

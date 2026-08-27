@@ -1,0 +1,1 @@
+import DataPage from "@/components/DataPage";export default function Page(){return <DataPage title="메시지" description="Zoom 참가 안내와 교육 알림 발송 이력을 확인합니다." columns={["수신자","유형","내용","발송일시","상태"]} rows={[["이수진","이메일","Zoom 참가 링크 안내","2026.08.27 14:34","발송완료"],["박민호","이메일","Zoom 참가 링크 안내","2026.08.27 13:20","발송완료"],["정아름","이메일","결제 대기 안내","-","발송대기"]]}/>}

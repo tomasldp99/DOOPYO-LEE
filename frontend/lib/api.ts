@@ -1,0 +1,3 @@
+export const API=process.env.NEXT_PUBLIC_API_URL||"http://localhost:8000/api/v1";
+export function authHeaders():Record<string,string>{const token=typeof window!=="undefined"?localStorage.getItem("edupay_token"):null;return token?{Authorization:`Bearer ${token}`}:{}}
+export async function api<T>(path:string,options:RequestInit={}):Promise<T>{const headers=new Headers(options.headers);headers.set("Content-Type","application/json");for(const [key,value] of Object.entries(authHeaders()))headers.set(key,value);const r=await fetch(`${API}${path}`,{...options,headers});if(!r.ok){const d=await r.json().catch(()=>({})) as {detail?:string};throw new Error(d.detail||"요청을 처리하지 못했습니다")};return r.json() as Promise<T>}

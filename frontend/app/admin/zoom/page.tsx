@@ -1,0 +1,1 @@
+import ComingSoon from "@/components/ComingSoon";export default function Page(){return <ComingSoon title="Zoom 관리" copy="현재는 교육별 Zoom URL을 안전하게 보관하고 결제 완료 이메일로 발송합니다. Zoom API 자동 회의 생성 기능을 연결할 수 있습니다."/>}
