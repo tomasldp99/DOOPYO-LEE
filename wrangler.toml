@@ -1,0 +1,8 @@
+name = "doopyo-lee"
+main = "innovation-proxy.mjs"
+compatibility_date = "2024-11-24"
+workers_dev = false
+
+[[routes]]
+pattern = "level.all4pm.com"
+custom_domain = true
